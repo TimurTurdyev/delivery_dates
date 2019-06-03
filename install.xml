@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Delivery Dates</name>
+  <code>delivery_dates</code>
+  <version>1.0</version>
+  <author>TimurTurdyev</author>
+  <link>https://github.com/TimurTurdyev/delivery_dates</link>
+  <file path="catalog/controller/product/product.php">
+    <operation>
+      <search><![CDATA[$data['stock'] = $this->language->get('text_instock');]]></search>
+      <add position="after" offset="1"><![CDATA[
+			$data['delivery_dates'] = $this->load->controller('extension/module/delivery_dates', $product_info);
+]]></add>
+    </operation>
+  </file>
+  <file path="catalog/view/theme/*/template/product/product.tpl">
+    <operation error="skip">
+      <search><![CDATA[<div id="product">]]></search>
+      <add position="before"><![CDATA[<?php echo $delivery_dates; ?>]]></add>
+    </operation>
+  </file>
+</modification>
