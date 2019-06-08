@@ -2,6 +2,7 @@
 $_['text_today']    = 'сегодня';
 $_['text_tomorrow'] = 'завтра';
 $_['text_date']     = '%s %s';
+$_['text_range']    = '%s - %s';
 
 $_['text_month_1']  = 'января';
 $_['text_month_2']  = 'февраля';

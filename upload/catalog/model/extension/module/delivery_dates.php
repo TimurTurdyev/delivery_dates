@@ -15,14 +15,17 @@ class ModelExtensionModuleDeliveryDates extends Model
         return isset($rules[$key]) ? $rules[$key] + array('methods' => array()) : array('methods' => array());
     }
 
-    // Дата через $days дней от дня старта или false, если срок не задан.
-    public function getDate($start, $days)
+    // Срок "2" или "2-3" в днях от дня старта: array(первый день, последний день) или false без срока.
+    public function getTerm($start, $days)
     {
-        if (!preg_match('/^\d+$/', trim($days))) {
+        if (!preg_match('/^(\d+)(?:-(\d+))?$/', trim($days), $match)) {
             return false;
         }
 
-        return $this->addDays($start, (int)$days);
+        $from = $this->addDays($start, (int)$match[1]);
+        $to = isset($match[2]) ? $this->addDays($start, (int)$match[2]) : $from;
+
+        return array($from, $to);
     }
 
     // Полночь нужного дня через mktime, чтобы переход на летнее время не сдвигал даты.

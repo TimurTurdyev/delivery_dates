@@ -165,9 +165,14 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         return $statuses;
     }
 
+    // Срок в рабочих днях: "2" или интервал "2-3".
     private function isTerm($days)
     {
-        return (bool)preg_match('/^\d{1,2}$/', $days);
+        if (!preg_match('/^(\d{1,2})(?:-(\d{1,2}))?$/', $days, $match)) {
+            return false;
+        }
+
+        return !isset($match[2]) || (int)$match[1] <= (int)$match[2];
     }
 
     private function link($route, $params = '')

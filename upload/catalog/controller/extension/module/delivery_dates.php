@@ -18,21 +18,31 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         }
 
         $today = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $tomorrow = mktime(0, 0, 0, date('n'), date('j') + 1, date('Y'));
 
         $data['title'] = $this->config->get('delivery_dates_title');
         $data['methods'] = array();
 
         foreach ($rule['methods'] as $method) {
-            $date = $this->model_extension_module_delivery_dates->getDate($today, $method['days']);
+            $term = $this->model_extension_module_delivery_dates->getTerm($today, $method['days']);
 
             $data['methods'][] = array(
                 'name' => $method['name'],
-                'date' => $date ? $this->dayText($date, $today, $tomorrow) : '',
+                'date' => $term ? $this->termText($term[0], $term[1], $today) : '',
             );
         }
 
         return $this->load->view('extension/module/delivery_dates', $data);
+    }
+
+    private function termText($from, $to, $today)
+    {
+        $tomorrow = mktime(0, 0, 0, date('n', $today), date('j', $today) + 1, date('Y', $today));
+
+        if ($from == $to) {
+            return $this->dayText($from, $today, $tomorrow);
+        }
+
+        return sprintf($this->language->get('text_range'), $this->dayText($from, $today, $tomorrow), $this->dayText($to, $today, $tomorrow));
     }
 
     private function dayText($day, $today, $tomorrow)
