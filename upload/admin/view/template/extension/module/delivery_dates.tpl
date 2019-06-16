@@ -33,6 +33,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
             <li><a href="#tab-rules" data-toggle="tab"><?php echo $tab_rules; ?></a></li>
+            <li><a href="#tab-calendar" data-toggle="tab"><?php echo $tab_calendar; ?></a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab-general">
@@ -95,6 +96,23 @@
                 </table>
               </div>
             </div>
+            <div class="tab-pane" id="tab-calendar">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-cutoff"><span data-toggle="tooltip" title="<?php echo $help_cutoff; ?>"><?php echo $entry_cutoff; ?></span></label>
+                <div class="col-sm-10">
+                  <div class="input-group time" style="max-width: 200px;">
+                    <input type="text" name="delivery_dates_cutoff" value="<?php echo $delivery_dates_cutoff; ?>" placeholder="14:00" data-date-format="HH:mm" id="input-cutoff" class="form-control" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default"><i class="fa fa-clock-o"></i></button>
+                    </span>
+                  </div>
+                  <p class="help-block"><?php echo $text_server_time; ?></p>
+                  <?php if ($error_cutoff) { ?>
+                  <div class="text-danger"><?php echo $error_cutoff; ?></div>
+                  <?php } ?>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -127,6 +145,9 @@ $('#tab-rules').on('click', '.btn-remove', function() {
   $(this).closest('.method').remove();
 });
 
+$('.time').datetimepicker({
+  pickDate: false
+});
 //--></script>
 <style type="text/css">
 #tab-rules .method {

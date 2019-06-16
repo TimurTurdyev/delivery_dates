@@ -15,6 +15,19 @@ class ModelExtensionModuleDeliveryDates extends Model
         return isset($rules[$key]) ? $rules[$key] + array('methods' => array()) : array('methods' => array());
     }
 
+    // День, с которого заказ уходит в работу: сегодня или завтра, если прием на сегодня уже закрыт.
+    public function getStartDay($now)
+    {
+        $day = $this->addDays($now, 0);
+        $cutoff = $this->config->get('delivery_dates_cutoff');
+
+        if ($cutoff && date('H:i', $now) >= $cutoff) {
+            $day = $this->addDays($day, 1);
+        }
+
+        return $day;
+    }
+
     // Срок "2" или "2-3" в днях от дня старта: array(первый день, последний день) или false без срока.
     public function getTerm($start, $days)
     {

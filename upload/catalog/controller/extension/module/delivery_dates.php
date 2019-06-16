@@ -17,13 +17,15 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             return '';
         }
 
-        $today = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        $now = time();
+        $today = mktime(0, 0, 0, date('n', $now), date('j', $now), date('Y', $now));
+        $start = $this->model_extension_module_delivery_dates->getStartDay($now);
 
         $data['title'] = $this->config->get('delivery_dates_title');
         $data['methods'] = array();
 
         foreach ($rule['methods'] as $method) {
-            $term = $this->model_extension_module_delivery_dates->getTerm($today, $method['days']);
+            $term = $this->model_extension_module_delivery_dates->getTerm($start, $method['days']);
 
             $data['methods'][] = array(
                 'name' => $method['name'],

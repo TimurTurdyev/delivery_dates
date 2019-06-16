@@ -20,10 +20,10 @@ class ControllerExtensionModuleDeliveryDates extends Controller
 
         $keys = array(
             'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_no_methods',
-            'tab_general', 'tab_rules',
+            'tab_general', 'tab_rules', 'tab_calendar',
             'column_stock_status', 'column_methods',
-            'entry_status', 'entry_title', 'entry_method', 'entry_days',
-            'help_title', 'help_days',
+            'entry_status', 'entry_title', 'entry_method', 'entry_days', 'entry_cutoff',
+            'help_title', 'help_days', 'help_cutoff',
             'button_save', 'button_cancel', 'button_add', 'button_remove',
         );
 
@@ -31,7 +31,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             $data[$key] = $this->language->get($key);
         }
 
-        foreach (array('warning', 'title') as $key) {
+        foreach (array('warning', 'title', 'cutoff') as $key) {
             $data['error_' . $key] = isset($this->error[$key]) ? $this->error[$key] : '';
         }
 
@@ -53,7 +53,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         $data['action'] = $this->link('extension/module/delivery_dates');
         $data['cancel'] = $this->link('extension/extension', '&type=module');
 
-        $defaults = array('status' => 0, 'title' => '', 'rules' => array());
+        $defaults = array('status' => 0, 'title' => '', 'cutoff' => '', 'rules' => array());
 
         foreach ($defaults as $name => $default) {
             $key = 'delivery_dates_' . $name;
@@ -82,6 +82,8 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             $data['method_index'] = max($data['method_index'], $methods ? max(array_keys($methods)) + 1 : 0);
         }
 
+        $data['text_server_time'] = sprintf($this->language->get('text_server_time'), date('d.m.Y H:i'), date_default_timezone_get());
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -101,6 +103,10 @@ class ControllerExtensionModuleDeliveryDates extends Controller
 
         if (isset($post['delivery_dates_title']) && utf8_strlen($post['delivery_dates_title']) > 64) {
             $this->error['title'] = $this->language->get('error_title');
+        }
+
+        if (!empty($post['delivery_dates_cutoff']) && !preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $post['delivery_dates_cutoff'])) {
+            $this->error['cutoff'] = $this->language->get('error_cutoff');
         }
 
         $rules = isset($post['delivery_dates_rules']) ? (array)$post['delivery_dates_rules'] : array();
@@ -147,6 +153,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         return array(
             'delivery_dates_status'   => isset($post['delivery_dates_status']) ? (int)$post['delivery_dates_status'] : 0,
             'delivery_dates_title'    => isset($post['delivery_dates_title']) ? trim($post['delivery_dates_title']) : '',
+            'delivery_dates_cutoff'   => isset($post['delivery_dates_cutoff']) ? $post['delivery_dates_cutoff'] : '',
             'delivery_dates_rules'    => $rules,
         );
     }
