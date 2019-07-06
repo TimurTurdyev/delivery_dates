@@ -112,6 +112,17 @@
                   <?php } ?>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><?php echo $entry_weekends; ?></label>
+                <div class="col-sm-10">
+                  <?php foreach ($weekdays as $day => $text) { ?>
+                  <label class="checkbox-inline"><input type="checkbox" name="delivery_dates_weekends[]" value="<?php echo $day; ?>"<?php echo in_array($day, $delivery_dates_weekends) ? ' checked="checked"' : ''; ?> /> <?php echo $text; ?></label>
+                  <?php } ?>
+                  <?php if ($error_weekends) { ?>
+                  <div class="text-danger"><?php echo $error_weekends; ?></div>
+                  <?php } ?>
+                </div>
+              </div>
             </div>
           </div>
         </form>

@@ -15,7 +15,7 @@ class ModelExtensionModuleDeliveryDates extends Model
         return isset($rules[$key]) ? $rules[$key] + array('methods' => array()) : array('methods' => array());
     }
 
-    // День, с которого заказ уходит в работу: сегодня или завтра, если прием на сегодня уже закрыт.
+    // День, с которого заказ уходит в работу: сегодня или ближайший рабочий, если сегодня выходной или прием уже закрыт.
     public function getStartDay($now)
     {
         $day = $this->addDays($now, 0);
@@ -25,20 +25,44 @@ class ModelExtensionModuleDeliveryDates extends Model
             $day = $this->addDays($day, 1);
         }
 
-        return $day;
+        return $this->workday($day);
     }
 
-    // Срок "2" или "2-3" в днях от дня старта: array(первый день, последний день) или false без срока.
+    // Срок "2" или "2-3" в рабочих днях от дня старта: array(первый день, последний день) или false без срока.
     public function getTerm($start, $days)
     {
         if (!preg_match('/^(\d+)(?:-(\d+))?$/', trim($days), $match)) {
             return false;
         }
 
-        $from = $this->addDays($start, (int)$match[1]);
-        $to = isset($match[2]) ? $this->addDays($start, (int)$match[2]) : $from;
+        $from = $this->addWorkdays($start, (int)$match[1]);
+        $to = isset($match[2]) ? $this->addWorkdays($start, (int)$match[2]) : $from;
 
         return array($from, $to);
+    }
+
+    public function isDayOff($day)
+    {
+        return in_array(date('N', $day), (array)$this->config->get('delivery_dates_weekends'));
+    }
+
+    private function addWorkdays($day, $count)
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $day = $this->workday($this->addDays($day, 1));
+        }
+
+        return $day;
+    }
+
+    // Неделя вперед - предел на случай, если выходными отмечены все дни.
+    private function workday($day)
+    {
+        for ($i = 0; $i < 7 && $this->isDayOff($day); $i++) {
+            $day = $this->addDays($day, 1);
+        }
+
+        return $day;
     }
 
     // Полночь нужного дня через mktime, чтобы переход на летнее время не сдвигал даты.
