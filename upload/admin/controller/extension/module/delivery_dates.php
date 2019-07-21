@@ -22,8 +22,8 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_no_methods',
             'tab_general', 'tab_rules', 'tab_calendar',
             'column_stock_status', 'column_methods',
-            'entry_status', 'entry_title', 'entry_method', 'entry_days', 'entry_cutoff', 'entry_weekends',
-            'help_title', 'help_days', 'help_cutoff',
+            'entry_status', 'entry_title', 'entry_method', 'entry_days', 'entry_cutoff', 'entry_weekends', 'entry_holidays',
+            'help_title', 'help_days', 'help_cutoff', 'help_holidays',
             'button_save', 'button_cancel', 'button_add', 'button_remove',
         );
 
@@ -31,7 +31,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             $data[$key] = $this->language->get($key);
         }
 
-        foreach (array('warning', 'title', 'cutoff', 'weekends') as $key) {
+        foreach (array('warning', 'title', 'cutoff', 'weekends', 'holidays') as $key) {
             $data['error_' . $key] = isset($this->error[$key]) ? $this->error[$key] : '';
         }
 
@@ -53,7 +53,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         $data['action'] = $this->link('extension/module/delivery_dates');
         $data['cancel'] = $this->link('extension/extension', '&type=module');
 
-        $defaults = array('status' => 0, 'title' => '', 'cutoff' => '', 'weekends' => array(6, 7), 'rules' => array());
+        $defaults = array('status' => 0, 'title' => '', 'cutoff' => '', 'weekends' => array(6, 7), 'holidays' => '', 'rules' => array());
 
         foreach ($defaults as $name => $default) {
             $key = 'delivery_dates_' . $name;
@@ -119,6 +119,10 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             $this->error['weekends'] = $this->language->get('error_weekends');
         }
 
+        if ($this->parseHolidays(isset($post['delivery_dates_holidays']) ? $post['delivery_dates_holidays'] : '') === false) {
+            $this->error['holidays'] = $this->language->get('error_holidays');
+        }
+
         $rules = isset($post['delivery_dates_rules']) ? (array)$post['delivery_dates_rules'] : array();
 
         foreach ($rules as $key => $rule) {
@@ -165,6 +169,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             'delivery_dates_title'    => isset($post['delivery_dates_title']) ? trim($post['delivery_dates_title']) : '',
             'delivery_dates_cutoff'   => isset($post['delivery_dates_cutoff']) ? $post['delivery_dates_cutoff'] : '',
             'delivery_dates_weekends' => isset($post['delivery_dates_weekends']) ? array_map('intval', (array)$post['delivery_dates_weekends']) : array(),
+            'delivery_dates_holidays' => implode(', ', $this->parseHolidays(isset($post['delivery_dates_holidays']) ? $post['delivery_dates_holidays'] : '')),
             'delivery_dates_rules'    => $rules,
         );
     }
@@ -191,6 +196,29 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         }
 
         return !isset($match[2]) || (int)$match[1] <= (int)$match[2];
+    }
+
+    // Даты через запятую или с новой строки: "dd.mm" повторяется каждый год, "dd.mm.yyyy" только в этот год.
+    private function parseHolidays($text)
+    {
+        $dates = array();
+
+        foreach (preg_split('/[\s,;]+/', trim($text), -1, PREG_SPLIT_NO_EMPTY) as $item) {
+            if (!preg_match('/^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?$/', $item, $match)) {
+                return false;
+            }
+
+            $year = isset($match[3]) ? (int)$match[3] : 2000;
+
+            if (!checkdate((int)$match[2], (int)$match[1], $year)) {
+                return false;
+            }
+
+            $date = sprintf('%02d.%02d', $match[1], $match[2]) . (isset($match[3]) ? '.' . $match[3] : '');
+            $dates[$date] = $date;
+        }
+
+        return array_values($dates);
     }
 
     private function link($route, $params = '')

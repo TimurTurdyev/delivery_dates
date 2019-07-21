@@ -1,6 +1,8 @@
 <?php
 class ModelExtensionModuleDeliveryDates extends Model
 {
+    private $holidays;
+
     // Правило статуса, который карточка показывает при нулевом остатке. Товар в наличии сроков не получает.
     public function getRule($product_id, $quantity)
     {
@@ -43,7 +45,13 @@ class ModelExtensionModuleDeliveryDates extends Model
 
     public function isDayOff($day)
     {
-        return in_array(date('N', $day), (array)$this->config->get('delivery_dates_weekends'));
+        if ($this->holidays === null) {
+            $this->holidays = array_flip(preg_split('/[\s,]+/', (string)$this->config->get('delivery_dates_holidays'), -1, PREG_SPLIT_NO_EMPTY));
+        }
+
+        return in_array(date('N', $day), (array)$this->config->get('delivery_dates_weekends'))
+            || isset($this->holidays[date('d.m', $day)])
+            || isset($this->holidays[date('d.m.Y', $day)]);
     }
 
     private function addWorkdays($day, $count)
@@ -55,10 +63,10 @@ class ModelExtensionModuleDeliveryDates extends Model
         return $day;
     }
 
-    // Неделя вперед - предел на случай, если выходными отмечены все дни.
+    // Год вперед - предел на случай, если выходными отмечено все подряд.
     private function workday($day)
     {
-        for ($i = 0; $i < 7 && $this->isDayOff($day); $i++) {
+        for ($i = 0; $i < 366 && $this->isDayOff($day); $i++) {
             $day = $this->addDays($day, 1);
         }
 

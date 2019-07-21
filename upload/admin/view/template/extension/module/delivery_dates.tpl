@@ -123,6 +123,15 @@
                   <?php } ?>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-holidays"><span data-toggle="tooltip" title="<?php echo $help_holidays; ?>"><?php echo $entry_holidays; ?></span></label>
+                <div class="col-sm-10">
+                  <textarea name="delivery_dates_holidays" rows="4" placeholder="01.01, 02.01, 07.01, 23.02, 08.03, 01.05, 09.05, 12.06, 04.11" id="input-holidays" class="form-control"><?php echo $delivery_dates_holidays; ?></textarea>
+                  <?php if ($error_holidays) { ?>
+                  <div class="text-danger"><?php echo $error_holidays; ?></div>
+                  <?php } ?>
+                </div>
+              </div>
             </div>
           </div>
         </form>
