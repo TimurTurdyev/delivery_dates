@@ -8,6 +8,7 @@
       <tr>
         <td><?php echo $method['name']; ?></td>
         <td><strong><?php echo $method['date']; ?></strong></td>
+        <td class="text-right"><?php echo $method['cost']; ?></td>
       </tr>
       <?php } ?>
     </tbody>

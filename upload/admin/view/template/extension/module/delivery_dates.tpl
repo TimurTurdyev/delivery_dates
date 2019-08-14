@@ -75,8 +75,9 @@
                           <?php $name = 'delivery_dates_rules[' . $key . '][methods][' . $index . ']'; ?>
                           <div class="method">
                             <div class="row">
-                              <div class="col-sm-8"><input type="text" name="<?php echo $name; ?>[name]" value="<?php echo $method['name']; ?>" placeholder="<?php echo $entry_method; ?>" class="form-control" /></div>
-                              <div class="col-sm-3"><input type="text" name="<?php echo $name; ?>[days]" value="<?php echo $method['days']; ?>" placeholder="<?php echo $entry_days; ?>" title="<?php echo $help_days; ?>" class="form-control" /></div>
+                              <div class="col-sm-5"><input type="text" name="<?php echo $name; ?>[name]" value="<?php echo $method['name']; ?>" placeholder="<?php echo $entry_method; ?>" class="form-control" /></div>
+                              <div class="col-sm-2"><input type="text" name="<?php echo $name; ?>[days]" value="<?php echo $method['days']; ?>" placeholder="<?php echo $entry_days; ?>" title="<?php echo $help_days; ?>" class="form-control" /></div>
+                              <div class="col-sm-4"><input type="text" name="<?php echo $name; ?>[cost]" value="<?php echo $method['cost']; ?>" placeholder="<?php echo $entry_cost; ?>" title="<?php echo $help_cost; ?>" class="form-control" /></div>
                               <div class="col-sm-1"><button type="button" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger btn-remove"><i class="fa fa-minus-circle"></i></button></div>
                             </div>
                             <?php if (isset($error_methods[$key][$index])) { ?>
@@ -142,8 +143,9 @@
 <script type="text/html" id="method-template">
 <div class="method">
   <div class="row">
-    <div class="col-sm-8"><input type="text" name="delivery_dates_rules[{key}][methods][{index}][name]" value="" placeholder="<?php echo $entry_method; ?>" class="form-control" /></div>
-    <div class="col-sm-3"><input type="text" name="delivery_dates_rules[{key}][methods][{index}][days]" value="" placeholder="<?php echo $entry_days; ?>" title="<?php echo $help_days; ?>" class="form-control" /></div>
+    <div class="col-sm-5"><input type="text" name="delivery_dates_rules[{key}][methods][{index}][name]" value="" placeholder="<?php echo $entry_method; ?>" class="form-control" /></div>
+    <div class="col-sm-2"><input type="text" name="delivery_dates_rules[{key}][methods][{index}][days]" value="" placeholder="<?php echo $entry_days; ?>" title="<?php echo $help_days; ?>" class="form-control" /></div>
+    <div class="col-sm-4"><input type="text" name="delivery_dates_rules[{key}][methods][{index}][cost]" value="" placeholder="<?php echo $entry_cost; ?>" title="<?php echo $help_cost; ?>" class="form-control" /></div>
     <div class="col-sm-1"><button type="button" title="<?php echo $button_remove; ?>" class="btn btn-danger btn-remove"><i class="fa fa-minus-circle"></i></button></div>
   </div>
 </div>

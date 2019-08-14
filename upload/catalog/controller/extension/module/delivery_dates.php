@@ -30,6 +30,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             $data['methods'][] = array(
                 'name' => $method['name'],
                 'date' => $term ? $this->termText($term[0], $term[1], $today) : '',
+                'cost' => $method['cost'],
             );
         }
 
