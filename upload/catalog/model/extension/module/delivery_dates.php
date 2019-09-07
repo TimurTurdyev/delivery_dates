@@ -14,7 +14,7 @@ class ModelExtensionModuleDeliveryDates extends Model
             $key = $query->num_rows ? $query->row['stock_status_id'] : '';
         }
 
-        return isset($rules[$key]) ? $rules[$key] + array('methods' => array()) : array('methods' => array());
+        return isset($rules[$key]) ? $rules[$key] + array('stock' => '', 'methods' => array()) : array('stock' => '', 'methods' => array());
     }
 
     // День, с которого заказ уходит в работу: сегодня или ближайший рабочий, если сегодня выходной или прием уже закрыт.

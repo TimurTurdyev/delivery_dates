@@ -9,6 +9,7 @@
     <operation>
       <search><![CDATA[$data['stock'] = $this->language->get('text_instock');]]></search>
       <add position="after" offset="1"><![CDATA[
+			$data['stock'] = $this->load->controller('extension/module/delivery_dates/stock', array('product' => $product_info, 'stock' => $data['stock']));
 			$data['delivery_dates'] = $this->load->controller('extension/module/delivery_dates', $product_info);
 ]]></add>
     </operation>

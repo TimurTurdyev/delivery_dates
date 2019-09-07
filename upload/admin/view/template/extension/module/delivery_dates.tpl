@@ -62,6 +62,7 @@
                   <thead>
                     <tr>
                       <td class="text-left" style="width: 20%;"><?php echo $column_stock_status; ?></td>
+                      <td class="text-left" style="width: 20%;"><span data-toggle="tooltip" title="<?php echo $help_stock; ?>"><?php echo $column_stock; ?></span></td>
                       <td class="text-left"><?php echo $column_methods; ?></td>
                     </tr>
                   </thead>
@@ -69,6 +70,7 @@
                     <?php foreach ($rules as $key => $rule) { ?>
                     <tr>
                       <td class="text-left"><?php echo $rule['name']; ?></td>
+                      <td class="text-left"><input type="text" name="delivery_dates_rules[<?php echo $key; ?>][stock]" value="<?php echo $rule['stock']; ?>" placeholder="<?php echo $rule['name']; ?>" class="form-control" /></td>
                       <td class="text-left">
                         <div class="methods" data-key="<?php echo $key; ?>">
                           <?php foreach ($rule['methods'] as $index => $method) { ?>

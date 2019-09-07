@@ -21,9 +21,9 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         $keys = array(
             'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_no_methods',
             'tab_general', 'tab_rules', 'tab_calendar',
-            'column_stock_status', 'column_methods',
+            'column_stock_status', 'column_stock', 'column_methods',
             'entry_status', 'entry_title', 'entry_method', 'entry_days', 'entry_cost', 'entry_cutoff', 'entry_weekends', 'entry_holidays',
-            'help_title', 'help_days', 'help_cost', 'help_cutoff', 'help_holidays',
+            'help_title', 'help_stock', 'help_days', 'help_cost', 'help_cutoff', 'help_holidays',
             'button_save', 'button_cancel', 'button_add', 'button_remove',
         );
 
@@ -76,6 +76,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
 
             $data['rules'][$key] = array(
                 'name'    => $name,
+                'stock'   => isset($rule['stock']) ? $rule['stock'] : '',
                 'methods' => $methods,
             );
 
@@ -162,7 +163,10 @@ class ControllerExtensionModuleDeliveryDates extends Controller
                 );
             }
 
-            $rules[$key] = array('methods' => $methods);
+            $rules[$key] = array(
+                'stock'   => isset($rule['stock']) ? trim($rule['stock']) : '',
+                'methods' => $methods,
+            );
         }
 
         return array(

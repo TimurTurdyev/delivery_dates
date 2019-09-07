@@ -37,6 +37,20 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         return $this->load->view('extension/module/delivery_dates', $data);
     }
 
+    // Текст наличия из правила, если он задан, иначе тот, что уже посчитала карточка.
+    public function stock($args)
+    {
+        if (!$this->config->get('delivery_dates_status') || empty($args['product']['product_id'])) {
+            return $args['stock'];
+        }
+
+        $this->load->model('extension/module/delivery_dates');
+
+        $rule = $this->model_extension_module_delivery_dates->getRule($args['product']['product_id'], $args['product']['quantity']);
+
+        return $rule['stock'] !== '' ? $rule['stock'] : $args['stock'];
+    }
+
     private function termText($from, $to, $today)
     {
         $tomorrow = mktime(0, 0, 0, date('n', $today), date('j', $today) + 1, date('Y', $today));
