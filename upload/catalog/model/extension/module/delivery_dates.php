@@ -3,13 +3,14 @@ class ModelExtensionModuleDeliveryDates extends Model
 {
     private $holidays;
 
-    // Правило статуса, который карточка показывает при нулевом остатке. Товар в наличии сроков не получает.
+    // Товары в наличии берут правило instock, остальные - правило своего статуса для нулевого остатка.
     public function getRule($product_id, $quantity)
     {
         $rules = (array)$this->config->get('delivery_dates_rules');
-        $key = '';
 
-        if ($quantity <= 0) {
+        if ($quantity > 0) {
+            $key = 'instock';
+        } else {
             $query = $this->db->query("SELECT stock_status_id FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "'");
             $key = $query->num_rows ? $query->row['stock_status_id'] : '';
         }

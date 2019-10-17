@@ -19,7 +19,7 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         }
 
         $keys = array(
-            'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_no_methods',
+            'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_instock', 'text_no_methods',
             'tab_general', 'tab_rules', 'tab_calendar',
             'column_stock_status', 'column_stock', 'column_methods',
             'entry_status', 'entry_title', 'entry_method', 'entry_days', 'entry_cost', 'entry_cutoff', 'entry_weekends', 'entry_holidays',
@@ -179,12 +179,12 @@ class ControllerExtensionModuleDeliveryDates extends Controller
         );
     }
 
-    // Статусы, которые карточка показывает при нулевом остатке.
+    // Товары в наличии идут отдельным правилом, остальные по статусу, который показывается при нулевом остатке.
     private function stockStatuses()
     {
         $this->load->model('localisation/stock_status');
 
-        $statuses = array();
+        $statuses = array('instock' => $this->language->get('text_instock'));
 
         foreach ($this->model_localisation_stock_status->getStockStatuses() as $status) {
             $statuses[$status['stock_status_id']] = $status['name'];
