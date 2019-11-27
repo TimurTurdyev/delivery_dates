@@ -169,6 +169,12 @@ $('#tab-rules').on('click', '.btn-remove', function() {
   $(this).closest('.method').remove();
 });
 
+var errorTab = $('#form-delivery-dates .text-danger:first').closest('.tab-pane');
+
+if (errorTab.length) {
+  $('a[href="#' + errorTab.attr('id') + '"]').tab('show');
+}
+
 $('.time').datetimepicker({
   pickDate: false
 });
