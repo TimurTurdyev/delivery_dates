@@ -59,7 +59,15 @@ class ControllerExtensionModuleDeliveryDates extends Controller
             return $this->dayText($from, $today, $tomorrow);
         }
 
-        return sprintf($this->language->get('text_range'), $this->dayText($from, $today, $tomorrow), $this->dayText($to, $today, $tomorrow));
+        if ($from == $today && $to == $tomorrow) {
+            return sprintf($this->language->get('text_or'), $this->language->get('text_today'), $this->language->get('text_tomorrow'));
+        }
+
+        if (date('Y-m', $from) == date('Y-m', $to)) {
+            return sprintf($this->language->get('text_days'), date('j', $from), date('j', $to), $this->month($to));
+        }
+
+        return sprintf($this->language->get('text_range'), $this->dateText($from), $this->dateText($to));
     }
 
     private function dayText($day, $today, $tomorrow)

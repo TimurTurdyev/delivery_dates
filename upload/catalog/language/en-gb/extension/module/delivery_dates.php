@@ -1,7 +1,9 @@
 <?php
 $_['text_today']    = 'today';
 $_['text_tomorrow'] = 'tomorrow';
+$_['text_or']       = '%s or %s';
 $_['text_date']     = '%s %s';
+$_['text_days']     = '%s-%s %s';
 $_['text_range']    = '%s - %s';
 
 $_['text_month_1']  = 'January';

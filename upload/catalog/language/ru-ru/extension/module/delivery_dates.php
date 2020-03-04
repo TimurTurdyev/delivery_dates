@@ -1,7 +1,9 @@
 <?php
 $_['text_today']    = 'сегодня';
 $_['text_tomorrow'] = 'завтра';
+$_['text_or']       = '%s или %s';
 $_['text_date']     = '%s %s';
+$_['text_days']     = '%s-%s %s';
 $_['text_range']    = '%s - %s';
 
 $_['text_month_1']  = 'января';
